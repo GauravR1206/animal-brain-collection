@@ -1,0 +1,281 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Animal Brain Collection</title>
+<meta name="description" content="Ex vivo MRI of animal brains: spinning glass-brain renders, DWI brain masks, T2w anatomy and diffusion means.">
+<style>
+:root{
+  --bg:#f5f5f4; --panel:#ffffff; --ink:#1c1c1e; --muted:#6b6b70; --line:#e2e2e0; --accent:#2f5fd8; --accent-ink:#fff;
+  --pass:#1d7f4b; --minor:#b7791f; --check:#7c5cd6; --fail:#c2352b; --chip:#eeeeec; --img-bg:#0c0c0e;
+  --radius:12px; --shadow:0 1px 2px rgba(0,0,0,.05),0 6px 20px -8px rgba(0,0,0,.12);
+}
+@media (prefers-color-scheme: dark){
+  :root{ --bg:#111113; --panel:#1b1b1f; --ink:#ececee; --muted:#9a9aa2; --line:#2b2b31; --accent:#7ea2ff; --accent-ink:#0b1430;
+    --pass:#4ccb85; --minor:#e3b04b; --check:#b39cff; --fail:#ff7b6f; --chip:#26262c; --shadow:0 1px 2px rgba(0,0,0,.4),0 8px 24px -10px rgba(0,0,0,.6); }
+}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:var(--ink);font:14px/1.45 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif}
+a{color:var(--accent)}
+.top{position:sticky;top:0;z-index:5;background:color-mix(in srgb,var(--bg) 88%,transparent);backdrop-filter:blur(10px);border-bottom:1px solid var(--line);padding:14px 24px}
+.top h1{margin:0;font-size:20px;letter-spacing:-.01em}
+.top .sub{margin:2px 0 0;color:var(--muted)}
+.controls{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-top:12px}
+.controls input[type=search]{flex:1 1 220px;min-width:180px;padding:8px 12px;border:1px solid var(--line);border-radius:8px;background:var(--panel);color:var(--ink);font:inherit}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip,.seg button{border:1px solid var(--line);background:var(--panel);color:var(--ink);padding:6px 11px;border-radius:999px;font:inherit;cursor:pointer;line-height:1.2}
+.chip.on,.seg button.on{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+.seg{display:inline-flex;border-radius:999px;overflow:hidden;border:1px solid var(--line)}
+.seg button{border:0;border-radius:0;border-right:1px solid var(--line)}
+.seg button:last-child{border-right:0}
+.seg .lbl{padding:6px 10px;color:var(--muted);background:var(--panel);border-right:1px solid var(--line)}
+select{padding:7px 10px;border:1px solid var(--line);border-radius:8px;background:var(--panel);color:var(--ink);font:inherit}
+.count{color:var(--muted);margin-left:auto}
+main{padding:20px 24px 60px;max-width:1700px;margin:0 auto}
+.overview{margin-bottom:20px}
+.overview summary{cursor:pointer;color:var(--muted)}
+.overview img{width:100%;border-radius:var(--radius);margin-top:10px;border:1px solid var(--line)}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,720px),1fr));gap:18px}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);overflow:hidden;display:flex;flex-direction:column}
+.card>header{display:flex;justify-content:space-between;gap:12px;align-items:flex-start;padding:14px 16px 8px}
+.card h2{margin:0;font-size:16px;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;letter-spacing:-.01em}
+.card .species{margin:2px 0 0;color:var(--muted)}
+.card .species .q{color:var(--muted);opacity:.7;cursor:help}
+.badges{display:flex;flex-wrap:wrap;gap:6px;justify-content:flex-end}
+.badge{font-size:11.5px;font-weight:600;padding:3px 8px;border-radius:999px;background:var(--chip);color:var(--muted);text-transform:uppercase;letter-spacing:.03em;white-space:nowrap}
+.badge.PASS{color:var(--pass)} .badge.MINOR{color:var(--minor)} .badge.CHECK{color:var(--check)} .badge.FAIL{color:var(--fail)}
+.badge.cls{text-transform:none;letter-spacing:0}
+.tabs{display:flex;gap:2px;padding:0 12px;border-bottom:1px solid var(--line)}
+.tabs button{background:none;border:0;border-bottom:2px solid transparent;padding:8px 10px;font:inherit;font-weight:600;color:var(--muted);cursor:pointer;margin-bottom:-1px}
+.tabs button.on{color:var(--ink);border-bottom-color:var(--accent)}
+.tabs button:disabled{opacity:.35;cursor:not-allowed}
+.pane{padding:12px 16px 16px}
+.pane[hidden]{display:none}
+.pane figure{margin:0 0 12px}
+.pane figcaption{color:var(--muted);font-size:12.5px;margin-top:5px;display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap}
+.pane figcaption code{font-size:11.5px}
+.shot{display:block;width:100%;border-radius:8px;background:var(--img-bg);cursor:zoom-in}
+.videobox{border-radius:8px;overflow:hidden;background:#fff;aspect-ratio:16/9;position:relative}
+.videobox.black{background:#000}
+.videobox video{display:block;width:100%;height:100%}
+.row{display:flex;gap:8px;margin-top:10px}
+.row img{flex:1;min-width:0;border-radius:6px;border:1px solid var(--line);cursor:zoom-in;background:#fff}
+.row img.black{background:#000}
+.scroller{overflow-x:auto;padding-bottom:4px}
+.scroller img{display:block;max-width:none;height:120px;border-radius:6px;cursor:zoom-in;margin-bottom:6px;background:var(--img-bg)}
+details.more summary{cursor:pointer;color:var(--muted);margin:6px 0}
+.note{color:var(--muted);font-size:12.5px}
+.note.warn{color:var(--minor)}
+.meta{display:grid;grid-template-columns:auto 1fr;gap:2px 12px;font-size:12.5px;color:var(--muted);margin-top:6px}
+.meta b{color:var(--ink);font-weight:500}
+.empty{color:var(--muted);padding:24px;text-align:center}
+pre.params{white-space:pre-wrap;font-size:11.5px;color:var(--muted);background:var(--chip);padding:8px 10px;border-radius:6px;margin:8px 0 0}
+#lightbox{position:fixed;inset:0;background:rgba(0,0,0,.92);z-index:50;display:flex;align-items:center;justify-content:center;cursor:zoom-out;padding:20px}
+#lightbox[hidden]{display:none}
+#lightbox img{max-width:100%;max-height:100%;object-fit:contain}
+#lightbox .cap{position:absolute;bottom:14px;left:0;right:0;text-align:center;color:#ddd;font-size:13px}
+footer{color:var(--muted);text-align:center;padding:30px 20px;font-size:12.5px}
+@media (max-width:600px){ .top{padding:12px 16px} main{padding:14px 16px 40px} .count{margin-left:0} }
+</style>
+</head>
+<body>
+<header class="top">
+  <h1>Animal Brain Collection</h1>
+  <p class="sub" id="subtitle">Ex vivo MRI across species: glass-brain renders, DWI brain masks, T2w anatomy and diffusion means.</p>
+  <div class="controls">
+    <input id="q" type="search" placeholder="Search subject ID or species…" autocomplete="off">
+    <div class="chips" id="classChips"></div>
+    <select id="qc" title="Filter by brain-mask QC status">
+      <option value="">Mask QC: all</option>
+      <option value="PASS">PASS</option><option value="MINOR">MINOR</option><option value="CHECK">CHECK</option><option value="FAIL">FAIL</option>
+    </select>
+    <label class="chip"><input type="checkbox" id="onlyGlass" style="vertical-align:-2px"> has video</label>
+    <div class="seg" id="bgSeg" title="Video / glass-brain background"><span class="lbl">bg</span><button data-bg="white" class="on">white</button><button data-bg="black">black</button></div>
+    <div class="seg" id="tabSeg" title="Switch every card to this tab"><span class="lbl">all cards</span><button data-tab="brain">Brain</button><button data-tab="mask">Mask</button><button data-tab="anat">Anat</button><button data-tab="dwi">DWI</button></div>
+    <span class="count" id="count"></span>
+  </div>
+</header>
+
+<main>
+  <details class="overview" id="overview">
+    <summary>Glass-brain contact sheet (all rendered subjects)</summary>
+    <img id="sheet" alt="Contact sheet of all glass-brain renders" loading="lazy">
+  </details>
+  <div class="grid" id="grid"></div>
+  <p class="empty" id="empty" hidden>No subjects match.</p>
+</main>
+<footer id="footer"></footer>
+
+<div id="lightbox" hidden><img alt=""><div class="cap"></div></div>
+
+<script src="data.js"></script>
+<script>
+(function(){
+  const D = window.SITE_DATA || {subjects:[]};
+  const S = D.subjects;
+  const state = {q:'', cls:'', qc:'', onlyGlass:false, bg:'white'};
+  try{ state.bg = localStorage.getItem('abc.bg') || 'white'; }catch(e){}
+
+  const esc = s => String(s==null?'':s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  const A = (sub, f) => 'assets/' + sub + '/' + f;
+  const fmt = (v, d=1) => (v===''||v==null||isNaN(+v)) ? '' : (+v).toFixed(d);
+
+  // ---------- header bits
+  const classes = [...new Set(S.map(s=>s.class).filter(Boolean))];
+  const order = ['mammal','bird','reptile','amphibian','fish'];
+  classes.sort((a,b)=>order.indexOf(a)-order.indexOf(b));
+  const chips = document.getElementById('classChips');
+  chips.innerHTML = ['', ...classes].map(c=>`<button class="chip${c===''?' on':''}" data-cls="${c}">${c||'all'} <span style="opacity:.6">${c? S.filter(s=>s.class===c).length : S.length}</span></button>`).join('');
+  chips.addEventListener('click', e=>{ const b=e.target.closest('button'); if(!b) return; state.cls=b.dataset.cls; [...chips.children].forEach(x=>x.classList.toggle('on', x===b)); applyFilter(); });
+  document.getElementById('q').addEventListener('input', e=>{ state.q=e.target.value.trim().toLowerCase(); applyFilter(); });
+  document.getElementById('qc').addEventListener('change', e=>{ state.qc=e.target.value; applyFilter(); });
+  document.getElementById('onlyGlass').addEventListener('change', e=>{ state.onlyGlass=e.target.checked; applyFilter(); });
+  const bgSeg = document.getElementById('bgSeg');
+  bgSeg.addEventListener('click', e=>{ const b=e.target.closest('button'); if(!b) return; setBg(b.dataset.bg); });
+  document.getElementById('tabSeg').addEventListener('click', e=>{ const b=e.target.closest('button'); if(!b) return; document.querySelectorAll('.card').forEach(c=>showTab(c, b.dataset.tab)); });
+  const sheet = document.getElementById('sheet');
+  const n_glass = S.filter(s=>s.glass && s.glass.white_mp4).length;
+  document.getElementById('subtitle').textContent = `${S.length} subjects · ${n_glass} spinning glass-brain videos · DWI brain masks, T2w anatomy and diffusion means. ` + (D.dataset && D.dataset.Name ? `Data: ${D.dataset.Name}` : '');
+  document.getElementById('footer').innerHTML = `Built ${esc(D.generated||'')}` + (D.dataset && D.dataset.DatasetDOI ? ` · ${esc(D.dataset.DatasetDOI)}` : '') + (D.dataset && D.dataset.Authors ? ` · ${esc(D.dataset.Authors.join(', '))}` : '') + ` · species labels are expanded from subject IDs (hover ? for unverified ones)`;
+
+  // ---------- cards
+  function card(s){
+    const g = s.glass||{}, m = s.mask||{};
+    const hasVideo = !!(g.white_mp4||g.black_mp4);
+    const hasMask = Object.keys(m).length>0;
+    const st = (s.status||'').toUpperCase();
+    const el = document.createElement('article');
+    el.className='card'; el.dataset.id=s.id;
+    el.dataset.search = (s.id+' '+(s.label||'')+' '+(s.class||'')+' '+(s.note||'')).toLowerCase();
+    el.innerHTML = `
+      <header>
+        <div><h2>${esc(s.id)}</h2>
+          <p class="species">${esc(s.label||'')}${s.label_guess?' <span class="q" title="Label inferred from the subject ID; not verified">?</span>':''}</p></div>
+        <div class="badges">${s.class?`<span class="badge cls">${esc(s.class)}</span>`:''}${st?`<span class="badge ${st}" title="${esc(s.note||'brain-mask QC status')}">mask ${st}</span>`:''}${s.mode?`<span class="badge" title="brain-mask mode">${esc(s.mode)} mode</span>`:''}</div>
+      </header>
+      <nav class="tabs">
+        <button data-tab="brain" ${hasVideo?'':'disabled title="no glass-brain render yet"'}>Brain</button>
+        <button data-tab="mask" ${hasMask?'':'disabled'}>Mask</button>
+        <button data-tab="anat" ${s.anat.length?'':'disabled'}>Anat</button>
+        <button data-tab="dwi" ${s.dwi.length||s.dwi_raw?'':'disabled'}>DWI</button>
+      </nav>
+      <section class="pane" data-pane="brain" hidden>${brainPane(s)}</section>
+      <section class="pane" data-pane="mask" hidden>${maskPane(s)}</section>
+      <section class="pane" data-pane="anat" hidden>${anatPane(s)}</section>
+      <section class="pane" data-pane="dwi" hidden>${dwiPane(s)}</section>`;
+    el.querySelector('.tabs').addEventListener('click', e=>{ const b=e.target.closest('button'); if(b && !b.disabled) showTab(el, b.dataset.tab); });
+    showTab(el, hasVideo?'brain':(hasMask?'mask':(s.anat.length?'anat':'dwi')));
+    return el;
+  }
+
+  function brainPane(s){
+    const g = s.glass||{};
+    if(!(g.white_mp4||g.black_mp4)) return `<p class="note">No glass-brain render for this subject yet (only subjects with a PASS mask were rendered).</p>`;
+    const bg = state.bg, mp4 = g[bg+'_mp4']||g.white_mp4||g.black_mp4, png = g[bg+'_png']||'';
+    return `
+      <div class="videobox ${bg}">
+        <video preload="none" controls loop muted playsinline ${png?`poster="${A(s.id,png)}"`:''} src="${A(s.id,mp4)}" data-sub="${esc(s.id)}"></video>
+      </div>
+      <div class="row">
+        ${g.white_png?`<img src="${A(s.id,g.white_png)}" loading="lazy" alt="${esc(s.id)} glass brain, white" data-cap="${esc(s.id)} · glass brain (white)">`:''}
+        ${g.black_png?`<img class="black" src="${A(s.id,g.black_png)}" loading="lazy" alt="${esc(s.id)} glass brain, black" data-cap="${esc(s.id)} · glass brain (black)">`:''}
+      </div>
+      <p class="note">Hollow glass shell of the DWI brain mask, 360° spin. Download: ${g.white_mp4?`<a href="${A(s.id,g.white_mp4)}" download>white</a>`:''}${g.white_mp4&&g.black_mp4?' · ':''}${g.black_mp4?`<a href="${A(s.id,g.black_mp4)}" download>black</a>`:''}</p>`;
+  }
+
+  function maskPane(s){
+    const m = s.mask||{};
+    if(!Object.keys(m).length) return `<p class="note">No brain mask for this subject.</p>`;
+    let h = '';
+    if(m.overlay) h += fig(s.id, m.overlay, 'DWI brain mask (red outline) on the mean b>1500 image, slices through the mask centroid', `${s.mask_mm3?fmt(s.mask_mm3,0)+' mm³':''}`);
+    h += `<div class="meta">${s.note?`<span>note</span><b class="${/FAIL|CHECK/.test((s.status||'').toUpperCase())?'warn':''}">${esc(s.note)}</b>`:''}${s.voxel_mm?`<span>voxel</span><b>${fmt(s.voxel_mm,3)} mm</b>`:''}${s.head_size_mm?`<span>head size L</span><b>${fmt(s.head_size_mm,1)} mm</b>`:''}</div>`;
+    const monts = ['mont_x','mont_y','mont_z'].filter(k=>m[k]);
+    const orthos = ['ortho_meandwi','ortho_meanb0'].filter(k=>m[k]);
+    if(monts.length||orthos.length){
+      h += `<details class="more"><summary>FSL QC montages (${monts.length+orthos.length})</summary><div class="scroller">` +
+        monts.map(k=>`<img src="${A(s.id,m[k])}" loading="lazy" alt="${esc(s.id)} ${k}" data-cap="${esc(s.id)} · ${k.replace('mont_','montage ')}">`).join('') +
+        `<div class="row" style="margin:0">` + orthos.map(k=>`<img src="${A(s.id,m[k])}" loading="lazy" alt="${esc(s.id)} ${k}" data-cap="${esc(s.id)} · ${k.replace('ortho_','ortho ')}" style="height:120px;flex:0 0 auto;background:var(--img-bg)">`).join('') + `</div></div>`;
+      if(s.params) h += `<pre class="params">${esc(s.params)}</pre>`;
+      h += `</details>`;
+    }
+    return h;
+  }
+
+  function anatPane(s){
+    if(!s.anat.length) return `<p class="note">No anatomical scan.</p>`;
+    return s.anat.map(a => a.png ? fig(s.id, a.png, `${a.label.replace(/_/g,' ')} · ${a.shape.join('×')} · ${a.vox.map(v=>fmt(v,3)).join('×')} mm`, `<code>${esc(a.src)}</code>`)
+                                 : `<p class="note">${esc(a.label)}: no snapshot (<code>${esc(a.src)}</code>, ${a.shape.join('×')})</p>`).join('');
+  }
+
+  function dwiPane(s){
+    let h = '';
+    if(s.dwi_raw){ const r=s.dwi_raw; h += `<div class="meta" style="margin:0 0 10px"><span>raw DWI</span><b><code>${esc(r.src)}</code></b><span>grid</span><b>${r.shape.join('×')} · ${r.vox.map(v=>fmt(v,3)).join('×')} mm</b>${r.n_dwi!=null?`<span>shells</span><b>${r.n_b0} b0 + ${r.n_dwi} DWI, b<sub>max</sub> ${fmt(r.bmax,0)}</b>`:''}</div>`; }
+    if(!s.dwi.length) h += `<p class="note">No mean b0 / mean DWI images (run make_brainmask.sh first).</p>`;
+    h += s.dwi.map(d => d.png ? fig(s.id, d.png, d.label, `<code>${esc(d.src)}</code>`) : '').join('');
+    return h;
+  }
+
+  function fig(sub, png, cap, right){
+    return `<figure><img class="shot" src="${A(sub,png)}" loading="lazy" alt="${esc(sub)} ${esc(cap)}" data-cap="${esc(sub)} · ${esc(cap)}"><figcaption><span>${cap}</span><span>${right||''}</span></figcaption></figure>`;
+  }
+
+  function showTab(cardEl, tab){
+    const btn = cardEl.querySelector(`.tabs button[data-tab="${tab}"]`);
+    if(!btn || btn.disabled) return;
+    cardEl.querySelectorAll('.tabs button').forEach(b=>b.classList.toggle('on', b===btn));
+    cardEl.querySelectorAll('.pane').forEach(p=>{ p.hidden = p.dataset.pane!==tab; });
+    if(tab!=='brain'){ const v=cardEl.querySelector('video'); if(v && !v.paused) v.pause(); }
+  }
+
+  function setBg(bg){
+    state.bg = bg; try{ localStorage.setItem('abc.bg', bg); }catch(e){}
+    [...bgSeg.querySelectorAll('button')].forEach(b=>b.classList.toggle('on', b.dataset.bg===bg));
+    sheet.src = `assets/glassbrain_sheet_${bg}.png`;
+    document.querySelectorAll('video[data-sub]').forEach(v=>{
+      const s = S.find(x=>x.id===v.dataset.sub); const g=s.glass||{};
+      const mp4 = g[bg+'_mp4']; if(!mp4) return;
+      const wasPlaying = !v.paused, t = v.currentTime;
+      v.poster = g[bg+'_png'] ? A(s.id, g[bg+'_png']) : '';
+      v.src = A(s.id, mp4);
+      v.closest('.videobox').className = 'videobox '+bg;
+      if(wasPlaying){ v.currentTime=t; v.play().catch(()=>{}); }
+    });
+  }
+
+  function applyFilter(){
+    let n=0;
+    document.querySelectorAll('.card').forEach(c=>{
+      const s = S.find(x=>x.id===c.dataset.id);
+      const ok = (!state.q || c.dataset.search.includes(state.q)) && (!state.cls || s.class===state.cls) &&
+                 (!state.qc || (s.status||'').toUpperCase()===state.qc) && (!state.onlyGlass || (s.glass && (s.glass.white_mp4||s.glass.black_mp4)));
+      c.hidden = !ok; if(ok) n++;
+    });
+    document.getElementById('count').textContent = `${n} / ${S.length} subjects`;
+    document.getElementById('empty').hidden = n>0;
+  }
+
+  // ---------- lightbox
+  const lb = document.getElementById('lightbox'), lbImg = lb.querySelector('img'), lbCap = lb.querySelector('.cap');
+  document.addEventListener('click', e=>{
+    const im = e.target.closest('img[data-cap]'); if(!im) return;
+    lbImg.src = im.src; lbCap.textContent = im.dataset.cap; lb.hidden=false;
+  });
+  lb.addEventListener('click', ()=>{ lb.hidden=true; lbImg.src=''; });
+  document.addEventListener('keydown', e=>{ if(e.key==='Escape'){ lb.hidden=true; lbImg.src=''; } });
+
+  // ---------- pause videos that scroll out of view
+  const io = 'IntersectionObserver' in window ? new IntersectionObserver(es=>es.forEach(x=>{ if(!x.isIntersecting && !x.target.paused) x.target.pause(); }), {threshold:0}) : null;
+
+  // ---------- render
+  const grid = document.getElementById('grid');
+  const frag = document.createDocumentFragment();
+  S.forEach(s=>frag.appendChild(card(s)));
+  grid.appendChild(frag);
+  if(io) document.querySelectorAll('video').forEach(v=>io.observe(v));
+  setBg(state.bg);
+  applyFilter();
+})();
+</script>
+</body>
+</html>
