@@ -298,7 +298,7 @@ footer{color:var(--muted);text-align:center;padding:30px 20px;font-size:12.5px}
     if(info){
       const ax = flipList(f), parts = [];
       if(ax.length) parts.push(`<code>code/render_glass.sh ${esc(id)} --flip ${ax.join(',')}</code>`);
-      if(f.r) parts.push(`<span>rotated ${f.r}°</span>`);
+      if(f.r){ const n=f.r/90; parts.push(`<span>rotated ${f.r}° in view</span> <code title="the screen plane is the mask's x–z plane; try xz repeated ${n}× or ${4-n}× depending on the direction you want">render_glass.sh ${esc(id)} --rot ${Array(n).fill('xz').join(',')}</code>`); }
       info.innerHTML = parts.length ? parts.join(' ') + ` <button class="reset" data-flipreset="${esc(id)}">reset</button>` : '';
     }
   }
