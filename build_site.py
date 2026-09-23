@@ -6,7 +6,8 @@ For every sub-* directory in the dataset root it
   * renders orthogonal mid-slice snapshots (sagittal / coronal / axial) of every anat T2w volume
     and of the mean b0 / mean high-b DWI images (derivatives/brainmask),
   * renders the DWI brain mask as a red outline on the mean DWI,
-  * copies the FSL QC montages, the glass-brain PNGs and the spinning glass-brain videos,
+  * copies the FSL QC montages, the glass-brain PNGs and the spinning glass-brain videos, and writes a
+    time-reversed copy of each video (used by the page's "flip Z" toggle),
 and writes website/data.js (subject metadata + file lists) which index.html reads.
 
 Run it through the Visualisation_Scripts uv environment (see build.sh):
@@ -19,6 +20,7 @@ import glob
 import json
 import os
 import shutil
+import subprocess
 import sys
 import time
 
@@ -166,6 +168,30 @@ def copy_if(src, dst):
     return False
 
 
+def ffmpeg_bin():
+    for c in ("ffmpeg",):
+        if shutil.which(c):
+            return c
+    try:
+        import imageio_ffmpeg
+        return imageio_ffmpeg.get_ffmpeg_exe()
+    except Exception:
+        return None
+
+
+def reversed_video(src, dst):
+    """Time-reversed copy of a spin video (= the object mirrored through the screen plane)."""
+    if os.path.exists(dst) and os.path.getmtime(dst) >= os.path.getmtime(src):
+        return True
+    ff = ffmpeg_bin()
+    if ff is None:
+        print("  ffmpeg not found; skipping reversed video", file=sys.stderr)
+        return False
+    r = subprocess.run([ff, "-v", "error", "-y", "-i", src, "-vf", "reverse", "-an", "-c:v", "libx264",
+                        "-preset", "fast", "-crf", "20", "-pix_fmt", "yuv420p", "-movflags", "+faststart", dst])
+    return r.returncode == 0 and os.path.exists(dst)
+
+
 def snapshot(nii, out_png, force, mask=None):
     if os.path.exists(out_png) and not force:
         return True
@@ -234,6 +260,8 @@ def build_subject(sub, summary, species, force):
         for src in (os.path.join(gb, f"{sub}_glass_{bg}.mp4"), os.path.join(ROOT, "videos", f"{sub}_glass_{bg}.mp4")):
             if copy_if(src, os.path.join(out, f"glass_{bg}.mp4")):
                 e["glass"][bg + "_mp4"] = f"glass_{bg}.mp4"
+                if reversed_video(os.path.join(out, f"glass_{bg}.mp4"), os.path.join(out, f"glass_{bg}_rev.mp4")):
+                    e["glass"][bg + "_rev_mp4"] = f"glass_{bg}_rev.mp4"
                 break
     return e
 

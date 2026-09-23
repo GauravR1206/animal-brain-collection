@@ -1,5 +1,5 @@
 window.SITE_DATA = {
- "generated": "2026-09-22 19:35",
+ "generated": "2026-09-22 19:47",
  "dataset": {
   "Name": "Animal Brain Collection Project",
   "BIDSVersion": "1.9.0",
@@ -95,8 +95,10 @@ window.SITE_DATA = {
    "glass": {
     "white_png": "glass_white.png",
     "white_mp4": "glass_white.mp4",
+    "white_rev_mp4": "glass_white_rev.mp4",
     "black_png": "glass_black.png",
-    "black_mp4": "glass_black.mp4"
+    "black_mp4": "glass_black.mp4",
+    "black_rev_mp4": "glass_black_rev.mp4"
    },
    "params": "sub-01MouseAdult mode=brain seed=none vox=0.149225mm L=6.77027mm otsu=10627.200195  n_ero=2 n_open=1 n_grow=7\nmask_mm3=308.687775",
    "status": "PASS",
@@ -188,8 +190,10 @@ window.SITE_DATA = {
    "glass": {
     "white_png": "glass_white.png",
     "white_mp4": "glass_white.mp4",
+    "white_rev_mp4": "glass_white_rev.mp4",
     "black_png": "glass_black.png",
-    "black_mp4": "glass_black.mp4"
+    "black_mp4": "glass_black.mp4",
+    "black_rev_mp4": "glass_black_rev.mp4"
    },
    "params": "sub-02MouseICR vox=0.2mm L=11.5665mm otsu=1407.466675  n_ero=3 n_open=2 n_grow=9\nmask_mm3=543.920044",
    "status": "PASS",
@@ -384,8 +388,10 @@ window.SITE_DATA = {
    "glass": {
     "white_png": "glass_white.png",
     "white_mp4": "glass_white.mp4",
+    "white_rev_mp4": "glass_white_rev.mp4",
     "black_png": "glass_black.png",
-    "black_mp4": "glass_black.mp4"
+    "black_mp4": "glass_black.mp4",
+    "black_rev_mp4": "glass_black_rev.mp4"
    },
    "params": "sub-04Rat4w mode=brain seed=none vox=0.14982mm L=11.006mm otsu=5371.399902  n_ero=4 n_open=2 n_grow=12\nmask_mm3=1310.547241",
    "status": "PASS",
@@ -698,8 +704,10 @@ window.SITE_DATA = {
    "glass": {
     "white_png": "glass_white.png",
     "white_mp4": "glass_white.mp4",
+    "white_rev_mp4": "glass_white_rev.mp4",
     "black_png": "glass_black.png",
-    "black_mp4": "glass_black.mp4"
+    "black_mp4": "glass_black.mp4",
+    "black_rev_mp4": "glass_black_rev.mp4"
    },
    "params": "sub-07ERousetteAdult vox=0.25mm L=14.1246mm otsu=2837.366699  n_ero=3 n_open=2 n_grow=9\nmask_mm3=1935.062500",
    "status": "PASS",
@@ -1218,8 +1226,10 @@ window.SITE_DATA = {
    "glass": {
     "white_png": "glass_white.png",
     "white_mp4": "glass_white.mp4",
+    "white_rev_mp4": "glass_white_rev.mp4",
     "black_png": "glass_black.png",
-    "black_mp4": "glass_black.mp4"
+    "black_mp4": "glass_black.mp4",
+    "black_rev_mp4": "glass_black_rev.mp4"
    },
    "params": "sub-12Ferret vox=0.249919mm L=20.6938mm otsu=920.733337  n_ero=4 n_open=3 n_grow=13\nmask_mm3=4773.992188",
    "status": "PASS",
@@ -1326,8 +1336,10 @@ window.SITE_DATA = {
    "glass": {
     "white_png": "glass_white.png",
     "white_mp4": "glass_white.mp4",
+    "white_rev_mp4": "glass_white_rev.mp4",
     "black_png": "glass_black.png",
-    "black_mp4": "glass_black.mp4"
+    "black_mp4": "glass_black.mp4",
+    "black_rev_mp4": "glass_black_rev.mp4"
    },
    "params": "sub-13GSOpossum vox=0.220586mm L=13.0118mm otsu=1861.599976  n_ero=3 n_open=2 n_grow=9\nmask_mm3=857.271606",
    "status": "PASS",
@@ -2185,8 +2197,10 @@ window.SITE_DATA = {
    "glass": {
     "white_png": "glass_white.png",
     "white_mp4": "glass_white.mp4",
+    "white_rev_mp4": "glass_white_rev.mp4",
     "black_png": "glass_black.png",
-    "black_mp4": "glass_black.mp4"
+    "black_mp4": "glass_black.mp4",
+    "black_rev_mp4": "glass_black_rev.mp4"
    },
    "params": "sub-21ChickenP21 vox=0.268834mm L=16.0295mm otsu=1572.099976  n_ero=3 n_open=2 n_grow=10\nmask_mm3=1477.073364",
    "status": "PASS",
@@ -2690,8 +2704,10 @@ window.SITE_DATA = {
    "glass": {
     "white_png": "glass_white.png",
     "white_mp4": "glass_white.mp4",
+    "white_rev_mp4": "glass_white_rev.mp4",
     "black_png": "glass_black.png",
-    "black_mp4": "glass_black.mp4"
+    "black_mp4": "glass_black.mp4",
+    "black_rev_mp4": "glass_black_rev.mp4"
    },
    "params": "sub-27NRHornbillAdult vox=0.2mm L=14.4595mm otsu=1111.500000  n_ero=4 n_open=2 n_grow=12\nmask_mm3=2770.872314",
    "status": "PASS",
@@ -2901,8 +2917,10 @@ window.SITE_DATA = {
    "glass": {
     "white_png": "glass_white.png",
     "white_mp4": "glass_white.mp4",
+    "white_rev_mp4": "glass_white_rev.mp4",
     "black_png": "glass_black.png",
-    "black_mp4": "glass_black.mp4"
+    "black_mp4": "glass_black.mp4",
+    "black_rev_mp4": "glass_black_rev.mp4"
    },
    "params": "sub-29BLapwing vox=0.275061mm L=13.9952mm otsu=2427.366699  n_ero=3 n_open=2 n_grow=9\nmask_mm3=1639.258423",
    "status": "PASS",
@@ -3009,8 +3027,10 @@ window.SITE_DATA = {
    "glass": {
     "white_png": "glass_white.png",
     "white_mp4": "glass_white.mp4",
+    "white_rev_mp4": "glass_white_rev.mp4",
     "black_png": "glass_black.png",
-    "black_mp4": "glass_black.mp4"
+    "black_mp4": "glass_black.mp4",
+    "black_rev_mp4": "glass_black_rev.mp4"
    },
    "params": "sub-30MDuck vox=0.179626mm L=10.9767mm otsu=2571.166748  n_ero=3 n_open=2 n_grow=10\nmask_mm3=1069.423218",
    "status": "PASS",
@@ -3117,8 +3137,10 @@ window.SITE_DATA = {
    "glass": {
     "white_png": "glass_white.png",
     "white_mp4": "glass_white.mp4",
+    "white_rev_mp4": "glass_white_rev.mp4",
     "black_png": "glass_black.png",
-    "black_mp4": "glass_black.mp4"
+    "black_mp4": "glass_black.mp4",
+    "black_rev_mp4": "glass_black_rev.mp4"
    },
    "params": "sub-31MDuck vox=0.275061mm L=13.9952mm otsu=2427.366699  n_ero=3 n_open=2 n_grow=9\nmask_mm3=1639.258423",
    "status": "PASS",
@@ -3534,8 +3556,10 @@ window.SITE_DATA = {
    "glass": {
     "white_png": "glass_white.png",
     "white_mp4": "glass_white.mp4",
+    "white_rev_mp4": "glass_white_rev.mp4",
     "black_png": "glass_black.png",
-    "black_mp4": "glass_black.mp4"
+    "black_mp4": "glass_black.mp4",
+    "black_rev_mp4": "glass_black_rev.mp4"
    },
    "params": "sub-35TToucanAdult vox=0.5mm L=19.6784mm otsu=2231.733398  n_ero=2 n_open=1 n_grow=6\nmask_mm3=6101.375000",
    "status": "PASS",
@@ -3642,8 +3666,10 @@ window.SITE_DATA = {
    "glass": {
     "white_png": "glass_white.png",
     "white_mp4": "glass_white.mp4",
+    "white_rev_mp4": "glass_white_rev.mp4",
     "black_png": "glass_black.png",
-    "black_mp4": "glass_black.mp4"
+    "black_mp4": "glass_black.mp4",
+    "black_rev_mp4": "glass_black_rev.mp4"
    },
    "params": "sub-36BHeronAdult vox=0.39941mm L=19.8955mm otsu=1797.233276  n_ero=2 n_open=2 n_grow=8\nmask_mm3=6320.961426",
    "status": "PASS",
@@ -3750,8 +3776,10 @@ window.SITE_DATA = {
    "glass": {
     "white_png": "glass_white.png",
     "white_mp4": "glass_white.mp4",
+    "white_rev_mp4": "glass_white_rev.mp4",
     "black_png": "glass_black.png",
-    "black_mp4": "glass_black.mp4"
+    "black_mp4": "glass_black.mp4",
+    "black_rev_mp4": "glass_black_rev.mp4"
    },
    "params": "sub-37GPenguin vox=0.249029mm L=15.3689mm otsu=3405.433350  n_ero=3 n_open=2 n_grow=10\nmask_mm3=2241.196045",
    "status": "PASS",
@@ -4416,8 +4444,10 @@ window.SITE_DATA = {
    "glass": {
     "white_png": "glass_white.png",
     "white_mp4": "glass_white.mp4",
+    "white_rev_mp4": "glass_white_rev.mp4",
     "black_png": "glass_black.png",
-    "black_mp4": "glass_black.mp4"
+    "black_mp4": "glass_black.mp4",
+    "black_rev_mp4": "glass_black_rev.mp4"
    },
    "params": "sub-44BDragon vox=0.1mm L=4.56292mm otsu=0.378976  n_ero=2 n_open=2 n_grow=7\nmask_mm3=72.844002",
    "status": "PASS",
@@ -4509,8 +4539,10 @@ window.SITE_DATA = {
    "glass": {
     "white_png": "glass_white.png",
     "white_mp4": "glass_white.mp4",
+    "white_rev_mp4": "glass_white_rev.mp4",
     "black_png": "glass_black.png",
-    "black_mp4": "glass_black.mp4"
+    "black_mp4": "glass_black.mp4",
+    "black_rev_mp4": "glass_black_rev.mp4"
    },
    "params": "sub-45JRaccoonDog mode=brain seed=none vox=0.399242mm L=30.0604mm otsu=736.171326  n_ero=4 n_open=2 n_grow=12\nmask_mm3=25634.300781",
    "status": "PASS",
@@ -4690,8 +4722,10 @@ window.SITE_DATA = {
    "glass": {
     "white_png": "glass_white.png",
     "white_mp4": "glass_white.mp4",
+    "white_rev_mp4": "glass_white_rev.mp4",
     "black_png": "glass_black.png",
-    "black_mp4": "glass_black.mp4"
+    "black_mp4": "glass_black.mp4",
+    "black_rev_mp4": "glass_black_rev.mp4"
    },
    "params": "sub-47CGecko vox=0.1mm L=3.83706mm otsu=0.580242  n_ero=2 n_open=1 n_grow=6\nmask_mm3=35.389004",
    "status": "PASS",
@@ -4783,8 +4817,10 @@ window.SITE_DATA = {
    "glass": {
     "white_png": "glass_white.png",
     "white_mp4": "glass_white.mp4",
+    "white_rev_mp4": "glass_white_rev.mp4",
     "black_png": "glass_black.png",
-    "black_mp4": "glass_black.mp4"
+    "black_mp4": "glass_black.mp4",
+    "black_rev_mp4": "glass_black_rev.mp4"
    },
    "params": "sub-48PChameleon vox=0.1mm L=5.13509mm otsu=0.026892  n_ero=3 n_open=2 n_grow=9\nmask_mm3=92.127998",
    "status": "PASS",
@@ -5052,8 +5088,10 @@ window.SITE_DATA = {
    "glass": {
     "white_png": "glass_white.png",
     "white_mp4": "glass_white.mp4",
+    "white_rev_mp4": "glass_white_rev.mp4",
     "black_png": "glass_black.png",
-    "black_mp4": "glass_black.mp4"
+    "black_mp4": "glass_black.mp4",
+    "black_rev_mp4": "glass_black_rev.mp4"
    },
    "params": "sub-51JBoar mode=brain seed=none vox=0.5mm L=41.9085mm otsu=240.067245  n_ero=4 n_open=3 n_grow=13\nmask_mm3=63692.625000",
    "status": "PASS",
@@ -5234,8 +5272,10 @@ window.SITE_DATA = {
    "glass": {
     "white_png": "glass_white.png",
     "white_mp4": "glass_white.mp4",
+    "white_rev_mp4": "glass_white_rev.mp4",
     "black_png": "glass_black.png",
-    "black_mp4": "glass_black.mp4"
+    "black_mp4": "glass_black.mp4",
+    "black_rev_mp4": "glass_black_rev.mp4"
    },
    "params": "sub-53JMacaque mode=brain seed=none vox=0.5mm L=42.4887mm otsu=527.112549  n_ero=4 n_open=3 n_grow=14\nmask_mm3=70928.375000",
    "status": "PASS",
