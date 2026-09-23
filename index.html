@@ -73,6 +73,9 @@ main{padding:20px 24px 60px;max-width:1700px;margin:0 auto}
 .row{display:flex;gap:8px;margin-top:10px}
 .row img{flex:1;min-width:0;border-radius:6px;border:1px solid var(--line);cursor:zoom-in;background:#fff}
 .row img.black{background:#000}
+.stills .still{flex:1;min-width:0;aspect-ratio:16/9;overflow:hidden;border-radius:6px;border:1px solid var(--line);background:#fff}
+.stills .still.black{background:#000}
+.stills .still img{display:block;width:100%;height:100%;border:0;border-radius:0}
 .scroller{overflow-x:auto;padding-bottom:4px}
 .scroller img{display:block;max-width:none;height:120px;border-radius:6px;cursor:zoom-in;margin-bottom:6px;background:var(--img-bg)}
 details.more summary{cursor:pointer;color:var(--muted);margin:6px 0}
@@ -103,7 +106,7 @@ footer{color:var(--muted);text-align:center;padding:30px 20px;font-size:12.5px}
     </select>
     <label class="chip"><input type="checkbox" id="onlyGlass" style="vertical-align:-2px"> has video</label>
     <div class="seg" id="bgSeg" title="Video / glass-brain background"><span class="lbl">bg</span><button data-bg="white" class="on">white</button><button data-bg="black">black</button></div>
-    <div class="seg" id="flipSeg" title="Flip every video (X: mirror left-right, Y: mirror up-down, Z: mirror through the screen, i.e. spin the other way)"><span class="lbl">flip all</span><button data-flip="x">X</button><button data-flip="y">Y</button><button data-flip="z">Z</button></div>
+    <div class="seg" id="flipSeg" title="Flip every video (X: mirror left-right, Y: mirror up-down, Z: mirror through the screen, i.e. spin the other way)"><span class="lbl">flip all</span><button data-flip="x">X</button><button data-flip="y">Y</button><button data-flip="z">Z</button><button data-rot="90" title="rotate every video a further 90° in the X–Y plane">↻ 90°</button></div>
     <div class="seg" id="tabSeg" title="Switch every card to this tab"><span class="lbl">all cards</span><button data-tab="brain">Brain</button><button data-tab="mask">Mask</button><button data-tab="anat">Anat</button><button data-tab="dwi">DWI</button></div>
     <span class="count" id="count"></span>
   </div>
@@ -128,7 +131,8 @@ footer{color:var(--muted);text-align:center;padding:30px 20px;font-size:12.5px}
   const S = D.subjects;
   const state = {q:'', cls:'', qc:'', onlyGlass:false, bg:'white', flip:{}};
   try{ state.bg = localStorage.getItem('abc.bg') || 'white'; state.flip = JSON.parse(localStorage.getItem('abc.flip')||'{}') || {}; }catch(e){}
-  const getFlip = id => state.flip[id] || {x:false,y:false,z:false};
+  const getFlip = id => ({x:false,y:false,z:false,r:0, ...(state.flip[id]||{})});
+  const viewTransform = f => `rotate(${f.r||0}deg) scaleX(${f.x?-1:1}) scaleY(${f.y?-1:1})`;
   const flipList = f => ['x','y','z'].filter(a=>f[a]);
   const videoFile = (g, bg, z) => (z && g[bg+'_rev_mp4']) || g[bg+'_mp4'] || g.white_mp4 || g.black_mp4;
 
@@ -150,7 +154,9 @@ footer{color:var(--muted);text-align:center;padding:30px 20px;font-size:12.5px}
   bgSeg.addEventListener('click', e=>{ const b=e.target.closest('button'); if(!b) return; setBg(b.dataset.bg); });
   document.getElementById('flipSeg').addEventListener('click', e=>{
     const b=e.target.closest('button'); if(!b) return;
-    const ax=b.dataset.flip, cards=[...document.querySelectorAll('.card')].filter(c=>!c.hidden && c.querySelector('video'));
+    const cards=[...document.querySelectorAll('.card')].filter(c=>!c.hidden && c.querySelector('video'));
+    if(b.dataset.rot){ cards.forEach(c=>rotate(c.dataset.id)); return; }
+    const ax=b.dataset.flip;
     const allOn = cards.length && cards.every(c=>getFlip(c.dataset.id)[ax]);
     cards.forEach(c=>setFlip(c.dataset.id, ax, !allOn));
     b.classList.toggle('on', !allOn);
@@ -211,11 +217,12 @@ footer{color:var(--muted);text-align:center;padding:30px 20px;font-size:12.5px}
           <button data-flip="y" class="${f.y?'on':''}" title="mirror up–down">Y</button>
           <button data-flip="z" class="${f.z?'on':''}" title="mirror through the screen plane: the spin runs the other way${g[bg+'_rev_mp4']?'':' (reversed video not built for this subject)'}">Z</button>
         </div>
+        <div class="seg"><button data-rot="${esc(s.id)}" class="${f.r?'on':''}" title="rotate a further 90° in the X–Y plane (${f.r||0}° now)">↻ 90°</button></div>
         <span class="flipinfo"></span>
       </div>
-      <div class="row">
-        ${g.white_png?`<img src="${A(s.id,g.white_png)}" loading="lazy" alt="${esc(s.id)} glass brain, white" data-cap="${esc(s.id)} · glass brain (white)">`:''}
-        ${g.black_png?`<img class="black" src="${A(s.id,g.black_png)}" loading="lazy" alt="${esc(s.id)} glass brain, black" data-cap="${esc(s.id)} · glass brain (black)">`:''}
+      <div class="row stills">
+        ${g.white_png?`<div class="still"><img src="${A(s.id,g.white_png)}" loading="lazy" alt="${esc(s.id)} glass brain, white" data-cap="${esc(s.id)} · glass brain (white)"></div>`:''}
+        ${g.black_png?`<div class="still black"><img src="${A(s.id,g.black_png)}" loading="lazy" alt="${esc(s.id)} glass brain, black" data-cap="${esc(s.id)} · glass brain (black)"></div>`:''}
       </div>
       <p class="note">Hollow glass shell of the DWI brain mask, 360° spin. Flips here only change the view; to bake one into the files re-render with the command shown. Download: ${g.white_mp4?`<a href="${A(s.id,g.white_mp4)}" download>white</a>`:''}${g.white_mp4&&g.black_mp4?' · ':''}${g.black_mp4?`<a href="${A(s.id,g.black_mp4)}" download>black</a>`:''}</p>`;
   }
@@ -259,16 +266,24 @@ footer{color:var(--muted);text-align:center;padding:30px 20px;font-size:12.5px}
   function setFlip(id, axis, on){
     const f = {...getFlip(id)}; f[axis] = on;
     state.flip[id] = f;
-    if(!f.x && !f.y && !f.z) delete state.flip[id];
+    if(!f.x && !f.y && !f.z && !f.r) delete state.flip[id];
+    try{ localStorage.setItem('abc.flip', JSON.stringify(state.flip)); }catch(e){}
+    applyFlip(id);
+  }
+  function rotate(id){
+    const f = {...getFlip(id)}; f.r = ((f.r||0) + 90) % 360;
+    state.flip[id] = f;
+    if(!f.x && !f.y && !f.z && !f.r) delete state.flip[id];
     try{ localStorage.setItem('abc.flip', JSON.stringify(state.flip)); }catch(e){}
     applyFlip(id);
   }
   function applyFlip(id){
     const c = document.querySelector(`.card[data-id="${id}"]`); if(!c) return;
     const s = S.find(x=>x.id===id), g = s.glass||{}, f = getFlip(id);
-    const tf = `scaleX(${f.x?-1:1}) scaleY(${f.y?-1:1})`;
-    c.querySelectorAll('.videobox video, .row img').forEach(el=>{ el.style.transform = tf; });
+    const tf = viewTransform(f);
+    c.querySelectorAll('.videobox video, .stills img').forEach(el=>{ el.style.transform = tf; });
     c.querySelectorAll('[data-flipseg] button').forEach(b=>b.classList.toggle('on', !!f[b.dataset.flip]));
+    const rb = c.querySelector('[data-rot]'); if(rb){ rb.classList.toggle('on', !!f.r); rb.title = `rotate a further 90° in the X–Y plane (${f.r||0}° now)`; }
     const v = c.querySelector('video');
     if(v){
       const want = A(id, videoFile(g, state.bg, f.z));
@@ -281,12 +296,15 @@ footer{color:var(--muted);text-align:center;padding:30px 20px;font-size:12.5px}
     }
     const info = c.querySelector('.flipinfo');
     if(info){
-      const ax = flipList(f);
-      info.innerHTML = ax.length ? `<code>code/render_glass.sh ${esc(id)} --flip ${ax.join(',')}</code> <button class="reset" data-flipreset="${esc(id)}">reset</button>` : '';
+      const ax = flipList(f), parts = [];
+      if(ax.length) parts.push(`<code>code/render_glass.sh ${esc(id)} --flip ${ax.join(',')}</code>`);
+      if(f.r) parts.push(`<span>rotated ${f.r}°</span>`);
+      info.innerHTML = parts.length ? parts.join(' ') + ` <button class="reset" data-flipreset="${esc(id)}">reset</button>` : '';
     }
   }
   document.addEventListener('click', e=>{
     const b = e.target.closest('[data-flipseg] button'); if(b){ const id=b.closest('[data-flipseg]').dataset.flipseg; setFlip(id, b.dataset.flip, !getFlip(id)[b.dataset.flip]); return; }
+    const rt = e.target.closest('.card [data-rot]'); if(rt){ rotate(rt.dataset.rot); return; }
     const r = e.target.closest('[data-flipreset]'); if(r){ const id=r.dataset.flipreset; delete state.flip[id]; try{ localStorage.setItem('abc.flip', JSON.stringify(state.flip)); }catch(e2){} applyFlip(id); }
   });
 

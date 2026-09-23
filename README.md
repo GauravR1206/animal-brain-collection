@@ -5,7 +5,7 @@ Static site (GitHub Pages) for the ex vivo animal-brain MRI dataset
 
 | tab   | content |
 |-------|---------|
-| Brain | spinning glass-brain video of the DWI brain mask (white / black background switch), plus still frames. X / Y / Z flip toggles per card (and "flip all" in the header): X and Y mirror the view, Z plays the time-reversed copy (`glass_*_rev.mp4`, made by the build with ffmpeg), which is what a mirror through the screen plane looks like for a spin. Flips are remembered in the browser and the card shows the matching `render_glass.sh --flip` command to bake them into the files. |
+| Brain | spinning glass-brain video of the DWI brain mask (white / black background switch), plus still frames. X / Y / Z flip toggles and a ↻ 90° button per card (and "flip all" in the header): X and Y mirror the view, each press of ↻ rotates a further 90° in the X–Y plane, Z plays the time-reversed copy (`glass_*_rev.mp4`, made by the build with ffmpeg), which is what a mirror through the screen plane looks like for a spin. Flips are remembered in the browser and the card shows the matching `render_glass.sh --flip` command to bake them into the files. |
 | Mask  | brain mask as a red outline on the mean b>1500 DWI, QC status / notes from `derivatives/brainmask_summary.tsv`, FSL QC montages |
 | Anat  | orthogonal mid-slices of every T2w volume in `sub-*/anat` |
 | DWI   | mean b0 and mean high-b images, shell counts from the bval file |
